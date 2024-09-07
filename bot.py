@@ -1,46 +1,45 @@
-import discord, requests, logging
+import discord, logging
 from discord.ext import commands
-from googletrans import Translator
+import os
+import asyncio
 
-vietToken = YourToken
-
-# Set up logging
+with open('token.txt') as file:
+    vietToken = file.read().strip()
+    
 logging.basicConfig(level=logging.INFO, 
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     handlers=[logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'),
                               logging.StreamHandler()]) 
 
 logger = logging.getLogger('discord')
-translator = Translator()
-
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix='! ', intents=intents)
+bot = commands.Bot(command_prefix='v!', intents = intents)
 
 @bot.event
 async def on_ready():
     print(f'We have logged in as {bot.user}')
 
-# Event: on_message
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
         return
-    logger.info(f'Received message: {message.content}')
     await bot.process_commands(message)
 
-# Command: translate
-@bot.slash_command(name = 'translate', description = 'translates text')
-async def translate(ctx, *, text):
-    translation = translator.translate(text, src='en', dest='vi')
-    response = f"{text} in Vietnamese is **{translation.text}**"
-    await ctx.respond(response)
-    logger.info(f'Translate command used with argument: {text}')
+async def load():
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py') and filename != '__init__.py':
+            cog_name = f'cogs.{filename[:-3]}'
+            bot.load_extension(cog_name)
+            print(f'Loaded {cog_name}')
 
-# Error handling
 @bot.event
 async def on_command_error(ctx, error):
     logger.error(f'Error occurred: {error}', exc_info=True)
 
-bot.run(vietToken)
+async def main():
+    await load()
+    await bot.start(vietToken)
+
+asyncio.run(main())
