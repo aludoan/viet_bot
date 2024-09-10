@@ -27,7 +27,7 @@ async def on_message(message):
         return
     await bot.process_commands(message)
 
-async def load():
+def load_cogs():
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py') and filename != '__init__.py':
             cog_name = f'cogs.{filename[:-3]}'
@@ -38,8 +38,5 @@ async def load():
 async def on_command_error(ctx, error):
     logger.error(f'Error occurred: {error}', exc_info=True)
 
-async def main():
-    await load()
-    await bot.start(vietToken)
-
-asyncio.run(main())
+load_cogs()
+bot.run(vietToken)
