@@ -33,15 +33,19 @@ class Alphabet(commands.Cog):
         def check(message):
             return message.author == ctx.author and message.channel == ctx.channel
         
+        last_pick = 0
+        pick = last_pick
         while True:
-            pick = random.randint(0, len(self.d)-1)
+            while pick == last_pick:
+                pick = random.randint(0, len(self.d)-1)
+            last_pick = pick
             letter, filepath = self.d[pick][0], self.d[pick][1]
 
             # Create and Send temp mp3 file
             new_filename = 'Guess The Letter!.mp3'
             temp_file_path = os.path.join('cogs/Alphabet', new_filename)
             shutil.copyfile(filepath, temp_file_path)
-            await ctx.send('Guess the letter', file=discord.File(temp_file_path))
+            await ctx.send('**Which letter is this**?', file=discord.File(temp_file_path))
             os.remove(temp_file_path)
 
             try:
@@ -58,6 +62,12 @@ class Alphabet(commands.Cog):
             else:
                 if user_answer.content.lower() == 'stop':
                     await ctx.send(f'Score: {correct}/{attempted}')
+                    if correct/attempted > 8.5/10:
+                        await ctx.send('Good Job!')
+                    elif correct/attempted > 6.9/10:
+                        await ctx.send('You were almost there!')
+                    else:
+                        await ctx.send('There\'s always a next time!')
                     break
                 elif user_answer.content.lower() == letter:
                     correct += 1
@@ -65,7 +75,7 @@ class Alphabet(commands.Cog):
                     await ctx.send(f'Correct')
                 else:
                     attempted += 1
-                    await ctx.send(f'Incorrect, the correct answer was {letter}')
+                    await ctx.send(f'Incorrect, the correct answer was **{letter}**')
 
 def setup(bot):
     bot.add_cog(Alphabet(bot))
