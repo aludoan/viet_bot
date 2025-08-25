@@ -5,23 +5,21 @@ import asyncio
 import shutil
 from discord.ext import commands
 
-class Alphabet(commands.Cog):
+class Listen(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    def load_files(self, category: str):
         self.d = {}
-        self.load_files()
-
-    def load_files(self):
-        for num, filename in enumerate(os.listdir('cogs/Alphabet')):
+        for num, filename in enumerate(os.listdir('cogs/data/audio/' + category)):
             letter = filename[:-4]
-            filepath = os.path.join('cogs/Alphabet', filename)
+            filepath = os.path.join('cogs/data/audio/' + category, filename)
             self.d[num] = (letter, filepath)
+        return 
 
-    @commands.command(name= 'alphabet', help='trains alphabet')
-    async def alphabet(self, ctx):
-        if not self.d:  # Check if dictionary is empty
-            await ctx.send('No letters available for training. Please check if files are loaded.')
-            return
+    @commands.command(name= 'listen', help='trains listening skills')
+    async def listen(self, ctx, category: str):
+        self.load_files(category)
 
         await ctx.send(
             'The trainer will begin. Type **stop** to close the trainer'
@@ -42,10 +40,10 @@ class Alphabet(commands.Cog):
             letter, filepath = self.d[pick][0], self.d[pick][1]
 
             # Create and Send temp mp3 file
-            new_filename = 'Guess The Letter!.mp3'
-            temp_file_path = os.path.join('cogs/Alphabet', new_filename)
+            new_filename = 'Guess!.mp3'
+            temp_file_path = os.path.join('cogs/data/audio/' + category, new_filename)
             shutil.copyfile(filepath, temp_file_path)
-            await ctx.send('**Which letter is this**?', file=discord.File(temp_file_path))
+            await ctx.send('**Which letter/word is this**?', file=discord.File(temp_file_path))
             os.remove(temp_file_path)
 
             try:
@@ -62,8 +60,10 @@ class Alphabet(commands.Cog):
             else:
                 if user_answer.content.lower() == 'stop':
                     await ctx.send(f'Score: {correct}/{attempted}')
-                    if correct/attempted > 8.5/10:
-                        await ctx.send('Good Job!')
+                    if correct/attempted == 10/10:
+                        await ctx.send('Perfect! 🎉🎉🎉')
+                    elif correct/attempted > 8.5/10:
+                        await ctx.send('Good Job! 👍')
                     elif correct/attempted > 6.9/10:
                         await ctx.send('You were almost there!')
                     else:
@@ -78,6 +78,6 @@ class Alphabet(commands.Cog):
                     await ctx.send(f'Incorrect, the correct answer was **{letter}**')
 
 def setup(bot):
-    bot.add_cog(Alphabet(bot))
+    bot.add_cog(Listen(bot))
 
             
