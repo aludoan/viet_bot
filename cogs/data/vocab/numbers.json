@@ -1,0 +1,55 @@
+{
+  "category": "numbers",
+  "words": [
+    {
+      "vietnamese": "một",
+      "english": "one",
+      "example": "Tôi có một con chó."
+    },
+    {
+      "vietnamese": "hai",
+      "english": "two",
+      "example": "Con gái tôi là hai tuổi."
+    },
+    {
+      "vietnamese": "ba",
+      "english": "three",
+      "example": "Rót cho tôi ba ly nước."
+    },
+    {
+      "vietnamese": "bốn",
+      "english": "four",
+      "example": "Số bốn là không may."
+    },
+    {
+      "vietnamese": "năm",
+      "english": "five",
+      "example": "Tôi mới thấy năm con vịt."
+    }
+    {
+      "vietnamese": "sáu",
+      "english": "six",
+      "example": "Ông sáu đã mất."
+    },
+    {
+      "vietnamese": "bảy",
+      "english": "seven",
+      "example": "Số bảy rất mây."
+    },
+    {
+      "vietnamese": "tám",
+      "english": "eight",
+      "example": "Tám tô phở là bao nhiêu?"
+    },
+    {
+      "vietnamese": "chín",
+      "english": "Giá của con heo này là chín đồng.",
+      "example": "Số bốn là không may."
+    },
+    {
+      "vietnamese": "mười",
+      "english": "ten",
+      "example": "Cơm này mười trên mười điểm."
+    }
+  ]
+}
