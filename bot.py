@@ -1,7 +1,6 @@
 import discord, logging
 from discord.ext import commands
 import os
-import asyncio
 
 with open('token.txt') as file:
     vietToken = file.read().strip()
@@ -15,7 +14,18 @@ logger = logging.getLogger('discord')
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix='v!', intents = intents)
+class VietBot(commands.Bot):
+    def __init__(self):
+        super().__init__(command_prefix='v!', intents=intents)
+    
+    async def setup_hook(self):
+        for filename in os.listdir('./cogs'):
+            if filename.endswith('.py') and filename != '__init__.py':
+                cog_name = f'cogs.{filename[:-3]}'
+                await self.load_extension(cog_name)
+                print(f'Loaded {cog_name}')
+
+bot = VietBot()
 
 @bot.event
 async def on_ready():
@@ -27,16 +37,8 @@ async def on_message(message):
         return
     await bot.process_commands(message)
 
-def load_cogs():
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py') and filename != '__init__.py':
-            cog_name = f'cogs.{filename[:-3]}'
-            bot.load_extension(cog_name)
-            print(f'Loaded {cog_name}')
-
 @bot.event
 async def on_command_error(ctx, error):
     logger.error(f'Error occurred: {error}', exc_info=True)
 
-load_cogs()
 bot.run(vietToken)
