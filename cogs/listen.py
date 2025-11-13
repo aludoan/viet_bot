@@ -60,7 +60,9 @@ class Listen(commands.Cog):
             else:
                 if user_answer.content.lower() == 'stop':
                     await ctx.send(f'Score: {correct}/{attempted}')
-                    if correct/attempted == 10/10:
+                    if attempted == 0:
+                        await ctx.send('See you next time!')
+                    elif correct/attempted == 10/10:
                         await ctx.send('Perfect! 🎉🎉🎉')
                     elif correct/attempted > 8.5/10:
                         await ctx.send('Good Job! 👍')

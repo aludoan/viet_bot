@@ -8,7 +8,7 @@ class Vocab(commands.Cog):
 
 
     @commands.command(name='vocab', help='presents flashcards of vocab')
-    async def vocab(self, ctx, category:str):
+    async def vocab(self, ctx, category:str = None):
         if category == "categories":
             embed = discord.Embed(
                 color = discord.Color.blue(),
@@ -16,6 +16,9 @@ class Vocab(commands.Cog):
                 description='• Numbers\n'
             )
             await ctx.send(embed=embed)
+            return
+        elif category is None:
+            await ctx.send('Please specify a category. Use `v!vocab categories` to see available categories.')
             return
         # Send initial page
         current_page = 0
