@@ -3,7 +3,7 @@ from discord.ext import commands
 import os
 
 with open('token.txt') as file:
-    vietToken = file.read().strip()
+        vietToken = file.read().strip()
     
 logging.basicConfig(level=logging.INFO, 
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -14,18 +14,7 @@ logger = logging.getLogger('discord')
 intents = discord.Intents.default()
 intents.message_content = True
 
-class VietBot(commands.Bot):
-    def __init__(self):
-        super().__init__(command_prefix='v!', intents=intents)
-    
-    async def setup_hook(self):
-        for filename in os.listdir('./cogs'):
-            if filename.endswith('.py') and filename != '__init__.py':
-                cog_name = f'cogs.{filename[:-3]}'
-                await self.load_extension(cog_name)
-                print(f'Loaded {cog_name}')
-
-bot = VietBot()
+bot = commands.Bot(command_prefix='v!', intents = intents)
 
 @bot.event
 async def on_ready():
@@ -37,8 +26,21 @@ async def on_message(message):
         return
     await bot.process_commands(message)
 
+async def load_cogs():
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py') and filename != '__init__.py':
+            cog_name = f'cogs.{filename[:-3]}'
+            await bot.load_extension(cog_name)
+            print(f'Loaded {cog_name}')
+
 @bot.event
 async def on_command_error(ctx, error):
     logger.error(f'Error occurred: {error}', exc_info=True)
 
-bot.run(vietToken)
+async def main():
+    await load_cogs()
+    await bot.start(vietToken)
+
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(main())

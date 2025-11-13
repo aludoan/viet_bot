@@ -16,5 +16,5 @@ class Translate(commands.Cog):
         except Exception as e:
             await ctx.send(f"❌ Translation error: {str(e)}")
 
-def setup(bot):
-    bot.add_cog(Translate(bot))
+async def setup(bot):
+    await bot.add_cog(Translate(bot))

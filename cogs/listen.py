@@ -14,8 +14,7 @@ class Listen(commands.Cog):
         for num, filename in enumerate(os.listdir('cogs/data/audio/' + category)):
             letter = filename[:-4]
             filepath = os.path.join('cogs/data/audio/' + category, filename)
-            self.d[num] = (letter, filepath)
-        return 
+            self.d[num] = (letter, filepath) 
 
     @commands.command(name= 'listen', help='trains listening skills')
     async def listen(self, ctx, category: str):
@@ -62,11 +61,11 @@ class Listen(commands.Cog):
                     await ctx.send(f'Score: {correct}/{attempted}')
                     if attempted == 0:
                         await ctx.send('See you next time!')
-                    elif correct/attempted == 10/10:
+                    elif correct/attempted >= 1.0:
                         await ctx.send('Perfect! 🎉🎉🎉')
-                    elif correct/attempted > 8.5/10:
+                    elif correct/attempted > 0.85:
                         await ctx.send('Good Job! 👍')
-                    elif correct/attempted > 6.9/10:
+                    elif correct/attempted > 0.69:
                         await ctx.send('You were almost there!')
                     else:
                         await ctx.send('There\'s always a next time!')
@@ -79,7 +78,7 @@ class Listen(commands.Cog):
                     attempted += 1
                     await ctx.send(f'Incorrect, the correct answer was **{letter}**')
 
-def setup(bot):
-    bot.add_cog(Listen(bot))
+async def setup(bot):
+    await bot.add_cog(Listen(bot))
 
             

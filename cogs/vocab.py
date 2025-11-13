@@ -1,5 +1,6 @@
 import discord
 import json
+import asyncio
 from discord.ext import commands
 
 class Vocab(commands.Cog):
@@ -22,8 +23,19 @@ class Vocab(commands.Cog):
             return
         # Send initial page
         current_page = 0
-        with open("cogs/data/vocab/" + category + ".json", 'r', encoding='utf-8') as file:
-            self.words = json.load(file)['words']
+        # Validate category to prevent directory traversal
+        if not category.replace('_', '').replace('-', '').isalnum():
+            await ctx.send('❌ Invalid category name.')
+            return
+        try:
+            with open("cogs/data/vocab/" + category + ".json", 'r', encoding='utf-8') as file:
+                self.words = json.load(file)['words']
+        except FileNotFoundError:
+            await ctx.send(f'❌ Category "{category}" not found.')
+            return
+        except json.JSONDecodeError:
+            await ctx.send(f'❌ Error reading category file.')
+            return
         word = self.words[0]
         embed = discord.Embed(
             color = discord.Color.green(),
@@ -41,10 +53,14 @@ class Vocab(commands.Cog):
         
         # Option for flipping embedded pages
         while True:
-            reaction,user = await self.bot.wait_for(
-                "reaction_add",
-                timeout = 60.0,
-                check = check)
+            try:
+                reaction,user = await self.bot.wait_for(
+                    "reaction_add",
+                    timeout = 60.0,
+                    check = check)
+            except asyncio.TimeoutError:
+                await ctx.send('Flashcard session timed out.')
+                break
             
             if str(reaction.emoji) == "➡️" and (current_page + 1) != len(self.words):
                 current_page += 1
@@ -60,5 +76,5 @@ class Vocab(commands.Cog):
 
             await message.edit(embed=new_embed)
 
-def setup(bot):
-    bot.add_cog(Vocab(bot))
+async def setup(bot):
+    await bot.add_cog(Vocab(bot))
