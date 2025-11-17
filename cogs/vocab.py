@@ -42,7 +42,7 @@ class Vocab(commands.Cog):
             title = word['vietnamese'],
             description = '**Translation:** ' + word['english'] + '\n' + '**Example: **' + word['example']
         )
-        embed.set_footer(text='Numbers | Page ' + str(current_page + 1) + " of " + str(len(self.words)))
+        embed.set_footer(text= category.capitalize() + ' | Page ' + str(current_page + 1) + " of " + str(len(self.words)))
         message = await ctx.send(embed=embed)
         await message.add_reaction("⬅️")
         await message.add_reaction("➡️")

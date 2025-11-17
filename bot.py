@@ -19,6 +19,11 @@ bot = commands.Bot(command_prefix='v!', intents = intents)
 @bot.event
 async def on_ready():
     print(f'We have logged in as {bot.user}')
+    print(f'\n--- Connected to {len(bot.guilds)} server(s): ---')
+    for guild in bot.guilds:
+        print(f'  • {guild.name} (ID: {guild.id}) - {guild.member_count} members')
+    print('---\n')
+    
 
 @bot.event
 async def on_message(message):
