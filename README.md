@@ -7,6 +7,7 @@ Demo:
 
 ### v!listen | Plays an audio file and user has to correctly guess the letter/word 
 <img width="713" height="814" alt="image" src="https://github.com/user-attachments/assets/77db9214-d60c-4685-877d-8b6056eb077f" />
+\
 ### Stopping the quiz
 <img width="369" height="212" alt="image" src="https://github.com/user-attachments/assets/9f1968df-a176-4759-9404-b65d87d3d8af" />
 
